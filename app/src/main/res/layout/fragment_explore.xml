@@ -45,11 +45,13 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recylerviewBlog"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/lottie"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="80dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
