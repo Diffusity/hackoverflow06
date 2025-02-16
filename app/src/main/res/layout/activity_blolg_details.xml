@@ -94,13 +94,13 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/myblogs"
+                android:id="@+id/btnDelete"
                 android:layout_width="350dp"
                 android:layout_height="60dp"
                 android:background="@drawable/btn"
                 app:backgroundTint="#fff387"
                 android:layout_marginTop="20dp"
-                android:text="My Blogs"
+                android:text="Delete"
                 android:textColor="#0a0b0d"
                 android:textSize="18sp"
                 android:fontFamily="@font/bold"
