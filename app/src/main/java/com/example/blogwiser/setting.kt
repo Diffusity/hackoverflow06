@@ -1,5 +1,6 @@
 package com.example.blogwiser
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,21 +14,36 @@ class setting : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v:ViewGroup
-        val logout:MaterialButton
-        val myblog:MaterialButton
-        v=inflater.inflate(R.layout.fragment_setting, container, false) as ViewGroup
-        logout=v.findViewById(R.id.logout)
-        logout.setOnClickListener(View.OnClickListener {
-            val intent: Intent = Intent(context,intro::class.java)
-            startActivity(intent)
-        })
-        myblog=v.findViewById(R.id.myblogs)
-        myblog.setOnClickListener(View.OnClickListener {
-            val intent: Intent = Intent(context,myblogs::class.java)
+        val v: View = inflater.inflate(R.layout.fragment_setting, container, false)
+
+        val logout: MaterialButton = v.findViewById(R.id.logout)
+        val myblog: MaterialButton = v.findViewById(R.id.myblogs)
+
+        // Logout button click
+        logout.setOnClickListener {
+            logoutUser()
+        }
+
+        // My Blogs button click
+        myblog.setOnClickListener {
+            val intent = Intent(requireContext(), myblogs::class.java)
             startActivity(intent)
             requireActivity().finish()
-        })
+        }
+
         return v
+    }
+
+    private fun logoutUser() {
+        // Clear SharedPreferences
+        val sharedPreferences = requireContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+        sharedPreferences.edit().clear().apply()
+
+        // Navigate to Login Activity & Clear All Previous Activities
+        val intent = Intent(requireContext(), login::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+
+        requireActivity().finish()  // Close current activity
     }
 }
