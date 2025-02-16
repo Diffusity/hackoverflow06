@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -104,6 +105,8 @@ class new_blog : Fragment() {
                 Toast.makeText(requireContext(), "Blog uploaded successfully!", Toast.LENGTH_SHORT).show()
                 etTitle.text.clear()
                 etDescription.text.clear()
+                val transaction: FragmentTransaction =childFragmentManager.beginTransaction()
+                transaction.replace(R.id.frame1,blog(),null).commit()
             }
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "Failed to upload blog", Toast.LENGTH_SHORT).show()

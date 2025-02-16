@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:strokeColor="#26FFFFFF"
+        app:strokeWidth="1dp"
+        android:backgroundTint="#0a0b0d"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:text="Hi there"
+                android:textColor="#D6DCED"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/bold"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/btn"
+                app:backgroundTint="#fff387"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Read More >>"
+                android:textSize="18sp"
+                android:fontFamily="@font/bold"
+                android:textColor="#0a0b0d"
+                android:layout_marginBottom="20dp"/>
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+
+</LinearLayout>
