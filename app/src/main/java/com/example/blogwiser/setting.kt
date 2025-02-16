@@ -28,7 +28,6 @@ class setting : Fragment() {
         myblog.setOnClickListener {
             val intent = Intent(requireContext(), myblogs::class.java)
             startActivity(intent)
-            requireActivity().finish()
         }
 
         return v
