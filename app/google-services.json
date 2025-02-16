@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "432873154468",
+    "project_id": "blogsphere-197b0",
+    "storage_bucket": "blogsphere-197b0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432873154468:android:a3fcb4bdfc82d098338331",
+        "android_client_info": {
+          "package_name": "com.example.blogwiser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUDmftbuLm7fNd5YXAhfXlCcvkKB2KiFA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
