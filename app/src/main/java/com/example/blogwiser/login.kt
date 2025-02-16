@@ -33,14 +33,8 @@ class login : AppCompatActivity() {
             insets
         }
 
-        // Initialize UI components
         val lottie: LottieAnimationView = findViewById(R.id.lottie)
         lottie.playAnimation()
-//        var pattern_pass= Pattern.compile("^" +
-//                "(?=.*[@#$%^&+=])" +     // at least 1 special character
-//                "(?=\\S+$)" +            // no white spaces
-//                ".{4,}" +                // at least 4 characters
-//                "$")
 
         emailInput = findViewById(R.id.email)
         passwordInput = findViewById(R.id.password)
@@ -48,7 +42,6 @@ class login : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        // On Login Button Click
         btnLogin.setOnClickListener {
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
@@ -68,8 +61,10 @@ class login : AppCompatActivity() {
                 if (task.isSuccessful) {
                     showSnackbar("Login Successful!")
                     saveUsernameLocally(email)
-                    startActivity(Intent(this, home::class.java))
-                    finish()
+
+                    val intent = Intent(this, home::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
                 } else {
                     showSnackbar("Login Failed: ${task.exception?.message}")
                 }

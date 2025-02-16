@@ -17,11 +17,9 @@ class MainActivity : AppCompatActivity() {
         val username = sharedPref.getString("email", null)
 
         if (username != null) {
-            // ✅ If username exists, go to home activity
             startActivity(Intent(this, home::class.java))
             finish()
         } else {
-            // ✅ If username is null, stay on MainActivity
             setContentView(R.layout.activity_main)
         }
 
