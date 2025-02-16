@@ -36,11 +36,11 @@ class login : AppCompatActivity() {
         // Initialize UI components
         val lottie: LottieAnimationView = findViewById(R.id.lottie)
         lottie.playAnimation()
-        var pattern_pass= Pattern.compile("^" +
-                "(?=.*[@#$%^&+=])" +     // at least 1 special character
-                "(?=\\S+$)" +            // no white spaces
-                ".{4,}" +                // at least 4 characters
-                "$")
+//        var pattern_pass= Pattern.compile("^" +
+//                "(?=.*[@#$%^&+=])" +     // at least 1 special character
+//                "(?=\\S+$)" +            // no white spaces
+//                ".{4,}" +                // at least 4 characters
+//                "$")
 
         emailInput = findViewById(R.id.email)
         passwordInput = findViewById(R.id.password)
@@ -57,10 +57,6 @@ class login : AppCompatActivity() {
                 showSnackbar("Please fill all fields")
                 return@setOnClickListener
             }
-            if(!password.isEmpty() && pattern_pass.matcher(password).matches()){
-                showSnackbar("Please enter valid password")
-                return@setOnClickListener
-            }
 
             loginUser(email, password)
         }
@@ -71,7 +67,9 @@ class login : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     showSnackbar("Login Successful!")
+                    saveUsernameLocally(email)
                     startActivity(Intent(this, home::class.java))
+                    finish()
                 } else {
                     showSnackbar("Login Failed: ${task.exception?.message}")
                 }
@@ -80,4 +78,12 @@ class login : AppCompatActivity() {
     private fun showSnackbar(message:String){
         Snackbar.make(findViewById(R.id.main),message, Snackbar.LENGTH_SHORT).show()
     }
+
+    private fun saveUsernameLocally(email: String) {
+        val sharedPref = getSharedPreferences("UserData", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("email", email)
+        editor.apply()
+    }
+
 }
