@@ -63,7 +63,6 @@ class signup : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // ✅ Validate password using regex
             if (!passwordPattern.matcher(password).matches()) {
                 showSnackbar("Password must be 8+ characters with uppercase, lowercase, number & special character")
                 return@setOnClickListener
