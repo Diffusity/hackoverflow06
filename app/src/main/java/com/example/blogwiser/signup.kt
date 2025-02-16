@@ -11,8 +11,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.airbnb.lottie.LottieAnimationView
 import com.example.blogwiser.model.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class signup : AppCompatActivity() {
 
@@ -53,8 +56,39 @@ class signup : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            signUpUser(username, email, password)
-        }
+            checkUserExists(username, email, password)        }
+    }
+
+    private fun checkUserExists(username: String, email: String, password: String) {
+        databaseRef.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    // Username already exists
+                    Toast.makeText(applicationContext, "Username already taken!", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Check if email exists
+                    databaseRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(emailSnapshot: DataSnapshot) {
+                            if (emailSnapshot.exists()) {
+                                Toast.makeText(applicationContext, "Email already in use!", Toast.LENGTH_SHORT).show()
+                            } else {
+                                // Proceed to sign up the user
+                                signUpUser(username, email, password)
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Toast.makeText(applicationContext, "Database error: ${error.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, "Database error: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun signUpUser(username: String, email: String, password: String) {

@@ -98,13 +98,13 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
                 android:fontFamily="@font/reg"
-                android:text="User - Name :"
+                android:text="E - mail :"
                 android:textColor="#D6DCED"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/username"
+                android:id="@+id/email"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="20dp"
@@ -113,7 +113,7 @@
                 android:background="@drawable/border"
                 android:ems="10"
                 android:fontFamily="@font/reg"
-                android:hint="User - Name"
+                android:hint="E - mail"
                 android:inputType="text"
                 android:padding="20dp"
                 android:textColor="#D6DCED"
