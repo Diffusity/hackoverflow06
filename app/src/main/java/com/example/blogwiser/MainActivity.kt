@@ -12,6 +12,19 @@ import com.google.android.material.button.MaterialButton
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPref = getSharedPreferences("UserData", MODE_PRIVATE)
+        val username = sharedPref.getString("email", null)
+
+        if (username != null) {
+            // ✅ If username exists, go to home activity
+            startActivity(Intent(this, home::class.java))
+            finish()
+        } else {
+            // ✅ If username is null, stay on MainActivity
+            setContentView(R.layout.activity_main)
+        }
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -24,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         btn.setOnClickListener(View.OnClickListener {
             val intent= Intent(this,intro::class.java)
             startActivity(intent)
+            finish()
         })
     }
 }

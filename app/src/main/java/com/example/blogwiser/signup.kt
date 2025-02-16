@@ -1,5 +1,6 @@
 package com.example.blogwiser
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Button
@@ -13,11 +14,8 @@ import com.airbnb.lottie.LottieAnimationView
 import com.example.blogwiser.model.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+
 import java.util.regex.Pattern
 
 class signup : AppCompatActivity() {
@@ -34,21 +32,23 @@ class signup : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val lottie: LottieAnimationView
 
-        lottie = findViewById(R.id.lottie)
+        val lottie: LottieAnimationView = findViewById(R.id.lottie)
         lottie.playAnimation()
 
         val usernameInput: EditText = findViewById(R.id.username)
         val emailInput: EditText = findViewById(R.id.email)
         val passwordInput: EditText = findViewById(R.id.password)
         val btn: Button = findViewById(R.id.btn)
-        var pattern_pass= Pattern.compile("^" +
-                "(?=.*[@#$%^&+=])" +     // at least 1 special character
-                "(?=\\S+$)" +            // no white spaces
-                ".{4,}" +                // at least 4 characters
-                "$")
 
+        val passwordPattern = Pattern.compile(
+            "^(?=.*[0-9])" +
+                    "(?=.*[a-z])" +
+                    "(?=.*[A-Z])" +
+                    "(?=.*[@#$%^&+=])" +
+                    "(?=\\S+$)" +
+                    ".{8,}$"
+        )
 
         auth = FirebaseAuth.getInstance()
         databaseRef = FirebaseDatabase.getInstance().getReference("Users")
@@ -62,11 +62,15 @@ class signup : AppCompatActivity() {
                 showSnackbar("Please fill all fields")
                 return@setOnClickListener
             }
-            if(!password.isEmpty() && pattern_pass.matcher(password).matches()){
-                showSnackbar("Please enter valid password")
+
+            // ✅ Validate password using regex
+            if (!passwordPattern.matcher(password).matches()) {
+                showSnackbar("Password must be 8+ characters with uppercase, lowercase, number & special character")
                 return@setOnClickListener
             }
-            checkUserExists(username, email, password)        }
+
+            checkUserExists(username, email, password)
+        }
     }
 
     private fun checkUserExists(username: String, email: String, password: String) {
@@ -74,16 +78,13 @@ class signup : AppCompatActivity() {
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    // Username already exists
                     showSnackbar("Username already taken!")
                 } else {
-                    // Check if email exists
                     databaseRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(emailSnapshot: DataSnapshot) {
                             if (emailSnapshot.exists()) {
                                 showSnackbar("Email already in use!")
                             } else {
-                                // Proceed to sign up the user
                                 signUpUser(username, email, password)
                             }
                         }
@@ -109,12 +110,12 @@ class signup : AppCompatActivity() {
                     if (userId != null) {
                         val user = User(username, email, "")
 
-                        // Store user data in Firebase Database
                         databaseRef.child(userId).setValue(user)
                             .addOnCompleteListener { dbTask ->
                                 if (dbTask.isSuccessful) {
                                     showSnackbar("Signup Successful!")
-                                    finish()  // Close signup screen
+                                    saveUsernameLocally(email)
+                                    startActivity(Intent(this, home::class.java))
                                 } else {
                                     showSnackbar("Failed to store user data: ${dbTask.exception?.message}")
                                 }
@@ -128,9 +129,15 @@ class signup : AppCompatActivity() {
             }
     }
 
-    private fun showSnackbar(message:String){
-        Snackbar.make(findViewById(R.id.main),message,Snackbar.LENGTH_SHORT).show()
+    private fun showSnackbar(message: String) {
+        Snackbar.make(findViewById(R.id.main), message, Snackbar.LENGTH_SHORT).show()
     }
+
+    private fun saveUsernameLocally(email: String) {
+        val sharedPref = getSharedPreferences("UserData", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("email", email)
+        editor.apply()
+    }
+
 }
-
-
