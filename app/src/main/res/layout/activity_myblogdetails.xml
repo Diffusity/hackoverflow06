@@ -6,7 +6,8 @@
     android:background="#0a0b0d"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".blolg_details">
+    tools:context=".myblogdetails">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -92,21 +93,6 @@
                     android:textColor="#D6DCED"
                     android:fontFamily="@font/reg" />
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/myblogs"
-                android:layout_width="350dp"
-                android:layout_height="60dp"
-                android:background="@drawable/btn"
-                app:backgroundTint="#fff387"
-                android:layout_marginTop="20dp"
-                android:text="My Blogs"
-                android:textColor="#0a0b0d"
-                android:textSize="18sp"
-                android:fontFamily="@font/bold"
-                android:textStyle="bold"
-                android:layout_marginBottom="30dp"
-                android:layout_gravity="center_horizontal"/>
         </LinearLayout>
     </ScrollView>
 
