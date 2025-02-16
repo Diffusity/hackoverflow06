@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blogwiser.adapters.BlogAdapter
+import com.example.blogwiser.adapters.MyAdapter
 import com.example.blogwiser.model.Blog
 
 import com.google.firebase.database.*
@@ -18,7 +19,7 @@ class myblogs : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var recyclerView: RecyclerView
-    private lateinit var blogAdapter: BlogAdapter
+    private lateinit var blogAdapter: MyAdapter
     private val blogList = mutableListOf<Blog>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +67,7 @@ class myblogs : AppCompatActivity() {
                                                 blogList.add(blogData)
                                             }
                                         }
-                                        blogAdapter = BlogAdapter(this@myblogs, blogList)
+                                        blogAdapter = MyAdapter(this@myblogs, blogList)
                                         recyclerView.adapter = blogAdapter
                                     }
 
