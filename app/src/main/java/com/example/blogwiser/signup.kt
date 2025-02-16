@@ -1,6 +1,7 @@
 package com.example.blogwiser
 
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -10,12 +11,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.airbnb.lottie.LottieAnimationView
 import com.example.blogwiser.model.User
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.regex.Pattern
 
 class signup : AppCompatActivity() {
 
@@ -40,7 +43,11 @@ class signup : AppCompatActivity() {
         val emailInput: EditText = findViewById(R.id.email)
         val passwordInput: EditText = findViewById(R.id.password)
         val btn: Button = findViewById(R.id.btn)
-
+        var pattern_pass= Pattern.compile("^" +
+                "(?=.*[@#$%^&+=])" +     // at least 1 special character
+                "(?=\\S+$)" +            // no white spaces
+                ".{4,}" +                // at least 4 characters
+                "$")
 
 
         auth = FirebaseAuth.getInstance()
@@ -52,10 +59,13 @@ class signup : AppCompatActivity() {
             val password = passwordInput.text.toString().trim()
 
             if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                showSnackbar("Please fill all fields")
                 return@setOnClickListener
             }
-
+            if(!password.isEmpty() && pattern_pass.matcher(password).matches()){
+                showSnackbar("Please enter valid password")
+                return@setOnClickListener
+            }
             checkUserExists(username, email, password)        }
     }
 
@@ -65,13 +75,13 @@ class signup : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     // Username already exists
-                    Toast.makeText(applicationContext, "Username already taken!", Toast.LENGTH_SHORT).show()
+                    showSnackbar("Username already taken!")
                 } else {
                     // Check if email exists
                     databaseRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(emailSnapshot: DataSnapshot) {
                             if (emailSnapshot.exists()) {
-                                Toast.makeText(applicationContext, "Email already in use!", Toast.LENGTH_SHORT).show()
+                                showSnackbar("Email already in use!")
                             } else {
                                 // Proceed to sign up the user
                                 signUpUser(username, email, password)
@@ -79,14 +89,14 @@ class signup : AppCompatActivity() {
                         }
 
                         override fun onCancelled(error: DatabaseError) {
-                            Toast.makeText(applicationContext, "Database error: ${error.message}", Toast.LENGTH_SHORT).show()
+                            showSnackbar("Database error: ${error.message}")
                         }
                     })
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(applicationContext, "Database error: ${error.message}", Toast.LENGTH_SHORT).show()
+                showSnackbar("Database error: ${error.message}")
             }
         })
     }
@@ -103,19 +113,23 @@ class signup : AppCompatActivity() {
                         databaseRef.child(userId).setValue(user)
                             .addOnCompleteListener { dbTask ->
                                 if (dbTask.isSuccessful) {
-                                    Toast.makeText(this, "Signup Successful!", Toast.LENGTH_SHORT).show()
+                                    showSnackbar("Signup Successful!")
                                     finish()  // Close signup screen
                                 } else {
-                                    Toast.makeText(this, "Failed to store user data: ${dbTask.exception?.message}", Toast.LENGTH_LONG).show()
+                                    showSnackbar("Failed to store user data: ${dbTask.exception?.message}")
                                 }
                             }
                     } else {
-                        Toast.makeText(this, "User ID is null. Authentication failed.", Toast.LENGTH_LONG).show()
+                        showSnackbar("User ID is null. Authentication failed.")
                     }
                 } else {
-                    Toast.makeText(this, "Signup Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    showSnackbar("Signup Failed: ${task.exception?.message}")
                 }
             }
+    }
+
+    private fun showSnackbar(message:String){
+        Snackbar.make(findViewById(R.id.main),message,Snackbar.LENGTH_SHORT).show()
     }
 }
 

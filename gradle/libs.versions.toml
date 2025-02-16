@@ -10,7 +10,7 @@ material = "1.12.0"
 activity = "1.10.0"
 constraintlayout = "2.2.0"
 googleGmsGoogleServices = "4.4.2"
-firebaseAuth = "23.2.0"
+firebaseAuth = "22.3.1"
 firebaseDatabase = "21.0.0"
 
 [libraries]

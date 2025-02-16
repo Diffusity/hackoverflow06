@@ -2,6 +2,7 @@ package com.example.blogwiser
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -11,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.airbnb.lottie.LottieAnimationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import java.util.regex.Pattern
 
 class login : AppCompatActivity() {
 
@@ -33,6 +36,11 @@ class login : AppCompatActivity() {
         // Initialize UI components
         val lottie: LottieAnimationView = findViewById(R.id.lottie)
         lottie.playAnimation()
+        var pattern_pass= Pattern.compile("^" +
+                "(?=.*[@#$%^&+=])" +     // at least 1 special character
+                "(?=\\S+$)" +            // no white spaces
+                ".{4,}" +                // at least 4 characters
+                "$")
 
         emailInput = findViewById(R.id.email)
         passwordInput = findViewById(R.id.password)
@@ -46,7 +54,11 @@ class login : AppCompatActivity() {
             val password = passwordInput.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
+                showSnackbar("Please fill all fields")
+                return@setOnClickListener
+            }
+            if(!password.isEmpty() && pattern_pass.matcher(password).matches()){
+                showSnackbar("Please enter valid password")
                 return@setOnClickListener
             }
 
@@ -58,11 +70,14 @@ class login : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+                    showSnackbar("Login Successful!")
                     startActivity(Intent(this, home::class.java))
                 } else {
-                    Toast.makeText(this, "Login Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    showSnackbar("Login Failed: ${task.exception?.message}")
                 }
             }
+    }
+    private fun showSnackbar(message:String){
+        Snackbar.make(findViewById(R.id.main),message, Snackbar.LENGTH_SHORT).show()
     }
 }
